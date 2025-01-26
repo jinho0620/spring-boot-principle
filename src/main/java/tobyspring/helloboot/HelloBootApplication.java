@@ -15,6 +15,7 @@ import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
@@ -35,16 +36,25 @@ public class HelloBootApplication {
 
 
 		WebServer webServer = serverFactory.getWebServer(servletContext -> {
-			servletContext.addServlet("hello", new HttpServlet() {
+			servletContext.addServlet("frontController", new HttpServlet() {
 				@Override
 				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-					String name = req.getParameter("name");
+					// 인증, 보안, 다국어처리와 같은 공통 기능들
+					if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
+						String name = req.getParameter("name");
 
-					resp.setStatus(HttpStatus.OK.value());
-					resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
-					resp.getWriter().println("Hello " + name);
+						resp.setStatus(HttpStatus.OK.value());
+						resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+						resp.getWriter().println("Hello " + name);
+					}
+					else if (req.getRequestURI().equals("/user")) {
+						resp.setStatus(HttpStatus.BAD_REQUEST.value());
+					}
+					else {
+						resp.setStatus(HttpStatus.NOT_FOUND.value());
+					}
 				}
-			}).addMapping("/hello");
+			}).addMapping("/*");
         });
 		webServer.start(); // localhost:8080 에 접근하면 404를 던진다. -> tomcat 이 잘 떴음을 확인할 수 있다.
 

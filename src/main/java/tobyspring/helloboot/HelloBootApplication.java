@@ -15,6 +15,7 @@ import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
@@ -29,16 +30,8 @@ import java.io.IOException;
 
 
 @Configuration // 이 class는 구성 정보를 가진 class다. -> spring container가 이 안에 @bean이 붙은 factory method가 있겠구나라고 판단.
+@ComponentScan // 이 annotation이 붙은 package부터 하위 package들의 @Component가 붙은 class를 전부 뒤져서 bean으로 등록
 public class HelloBootApplication {
-	@Bean // spring container가 사용하는 bean object를 생성하는 factory method라는 의미
-	public HelloController helloController(HelloService helloService) {
-		return new HelloController(helloService);
-	}
-
-	@Bean
-	public HelloService helloService() {
-		return new SimpleHelloService();
-	}
 	public static void main(String[] args) {
 		// annotation이 붙은 java code를 읽어서 구성 정보를 읽어오는 spring container
 		// @Configuration이 붙은 class를 가장 먼저 등록
@@ -59,8 +52,6 @@ public class HelloBootApplication {
 		};
 		applicationContext.register(HelloBootApplication.class); // 여기서 부터 읽기 시작해라
 		applicationContext.refresh(); // create bean object when the spring container starts up
-
-
 
 	}
 

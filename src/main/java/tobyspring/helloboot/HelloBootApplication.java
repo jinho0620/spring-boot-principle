@@ -29,6 +29,7 @@ public class HelloBootApplication {
 	public static void main(String[] args) {
 		GenericApplicationContext applicationContext = new GenericApplicationContext(); // spring container
 		applicationContext.registerBean(HelloController.class);
+		applicationContext.registerBean(SimpleHelloService.class);
 		applicationContext.refresh(); // create bean object when the spring container starts up
 
 

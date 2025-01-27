@@ -29,7 +29,7 @@ public class HelloBootApplication {
 	public static void main(String[] args) {
 		GenericApplicationContext applicationContext = new GenericApplicationContext(); // spring container
 		applicationContext.registerBean(HelloController.class);
-		applicationContext.refresh(); // create bean object
+		applicationContext.refresh(); // create bean object when the spring container starts up
 
 
 //		TomcatServletWebServerFactory 자체가 tomcat servlet web server는 아니다.

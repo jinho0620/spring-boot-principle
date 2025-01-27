@@ -19,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.context.support.GenericWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import java.io.IOException;
 
@@ -27,40 +29,25 @@ import java.io.IOException;
 public class HelloBootApplication {
 
 	public static void main(String[] args) {
-		GenericApplicationContext applicationContext = new GenericApplicationContext(); // spring container
+		GenericWebApplicationContext applicationContext = new GenericWebApplicationContext() {
+			@Override
+			protected void onRefresh() { // refresh() method가 실행되는 시점에 hook으로 진행되게 된다.
+				super.onRefresh();
+
+				ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
+				WebServer webServer = serverFactory.getWebServer(servletContext -> {
+					servletContext.addServlet("dispatcherServlet",
+							new DispatcherServlet(this)
+					).addMapping("/*");
+				});
+				webServer.start(); // localhost:8080 에 접근하면 404를 던진다. -> tomcat 이 잘 떴음을 확인할 수 있다.
+
+			}
+		}; // spring container
 		applicationContext.registerBean(HelloController.class);
 		applicationContext.registerBean(SimpleHelloService.class);
 		applicationContext.refresh(); // create bean object when the spring container starts up
 
-
-//		TomcatServletWebServerFactory 자체가 tomcat servlet web server는 아니다.
-//		tomcat servlet web server를 만드는 복잡한 생성과정과 설정을 하고, 생성 요청을 하면 생성을 해준다.
-//		TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-//		아래와 같이 Jetty 로 web servlet container 를 갈아낄 수도 있다. 이를 위해 받는 type을 interface로 바꿔준다.
-//		ServletWebServerFactory serverFactory = new JettyServletWebServerFactory();
-		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
-
-		WebServer webServer = serverFactory.getWebServer(servletContext -> {
-				servletContext.addServlet("frontController", new HttpServlet() {
-				@Override
-				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-					// 인증, 보안, 다국어처리와 같은 공통 기능들
-					if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
-						String name = req.getParameter("name");
-
-						HelloController helloController = applicationContext.getBean(HelloController.class);
-						String ret = helloController.hello(name);
-
-						resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
-						resp.getWriter().println(ret);
-					}
-					else {
-						resp.setStatus(HttpStatus.NOT_FOUND.value());
-					}
-				}
-			}).addMapping("/*");
-        });
-		webServer.start(); // localhost:8080 에 접근하면 404를 던진다. -> tomcat 이 잘 떴음을 확인할 수 있다.
 
 
 	}

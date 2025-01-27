@@ -14,6 +14,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.server.WebServer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,11 @@ import java.io.IOException;
 public class HelloBootApplication {
 
 	public static void main(String[] args) {
+		GenericApplicationContext applicationContext = new GenericApplicationContext(); // spring container
+		applicationContext.registerBean(HelloController.class);
+		applicationContext.refresh(); // create bean object
+
+
 //		TomcatServletWebServerFactory 자체가 tomcat servlet web server는 아니다.
 //		tomcat servlet web server를 만드는 복잡한 생성과정과 설정을 하고, 생성 요청을 하면 생성을 해준다.
 //		TomcatServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
@@ -33,26 +39,19 @@ public class HelloBootApplication {
 //		ServletWebServerFactory serverFactory = new JettyServletWebServerFactory();
 		ServletWebServerFactory serverFactory = new TomcatServletWebServerFactory();
 
-
-
 		WebServer webServer = serverFactory.getWebServer(servletContext -> {
-			HelloController helloController = new HelloController();
-
-			servletContext.addServlet("frontController", new HttpServlet() {
+				servletContext.addServlet("frontController", new HttpServlet() {
 				@Override
 				protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 					// 인증, 보안, 다국어처리와 같은 공통 기능들
 					if (req.getRequestURI().equals("/hello") && req.getMethod().equals(HttpMethod.GET.name())) {
 						String name = req.getParameter("name");
 
+						HelloController helloController = applicationContext.getBean(HelloController.class);
 						String ret = helloController.hello(name);
 
-						resp.setStatus(HttpStatus.OK.value());
-						resp.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
+						resp.setContentType(MediaType.TEXT_PLAIN_VALUE);
 						resp.getWriter().println(ret);
-					}
-					else if (req.getRequestURI().equals("/user")) {
-						resp.setStatus(HttpStatus.BAD_REQUEST.value());
 					}
 					else {
 						resp.setStatus(HttpStatus.NOT_FOUND.value());

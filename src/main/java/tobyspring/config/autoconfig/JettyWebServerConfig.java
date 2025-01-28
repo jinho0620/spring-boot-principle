@@ -8,22 +8,15 @@ import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.type.AnnotatedTypeMetadata;
+import org.springframework.util.ClassUtils;
+import tobyspring.config.ConditionalOnMyClass;
 import tobyspring.config.MyAutoConfiguration;
 
 @MyAutoConfiguration
-@Conditional(JettyWebServerConfig.JettyCondition.class)
+@ConditionalOnMyClass("org.eclipse.jetty.server.Server")
 public class JettyWebServerConfig {
     @Bean("jettyWebServerFactory")
     public ServletWebServerFactory servletWebServerFactory() {
         return new JettyServletWebServerFactory();
-    }
-
-
-    static class JettyCondition implements Condition {
-        // false이면 선택 제외
-        @Override
-        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return false;
-        }
     }
 }

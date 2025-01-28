@@ -43,6 +43,6 @@ public class HelloBootApplication {
 	}
 
 	public static void main(String[] args) {
-		MySpringApplication.run(HelloBootApplication.class);
+		SpringApplication.run(HelloBootApplication.class);
 	}
 }

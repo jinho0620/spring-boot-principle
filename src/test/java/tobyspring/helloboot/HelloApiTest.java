@@ -23,7 +23,18 @@ public class HelloApiTest {
         // header(content-type) text/plain
         assertThat(res.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE)).startsWith(MediaType.TEXT_PLAIN_VALUE);
         // body Hello Jinho
-        assertThat(res.getBody()).isEqualTo("Hello Jinho");
+        assertThat(res.getBody()).isEqualTo("*Hello Jinho*");
 
+    }
+
+    @Test
+    void failsHelloApi() {
+        // http localhost:8000/hello?name=Jinho
+        TestRestTemplate rest = new TestRestTemplate(); // 그냥 RestTemplate 은 exception을 던짐
+
+        ResponseEntity<String> res
+                = rest.getForEntity("http://localhost:8080/hello?name=", String.class);
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

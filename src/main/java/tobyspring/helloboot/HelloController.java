@@ -11,19 +11,20 @@ import java.util.Objects;
 //@RequestMapping
 public class HelloController {
     private final HelloService helloService;
-    private final ApplicationContext applicationContext;
+//    private final ApplicationContext applicationContext;
 
     // spring container looks up beans if there's a class that implements HelloService and injects it.
-    public HelloController(HelloService helloService, ApplicationContext applicationContext) {
+    public HelloController(HelloService helloService) {
         this.helloService = helloService;
-        this.applicationContext = applicationContext;
+//        this.applicationContext = applicationContext;
     }
 
     @GetMapping("/hello")
 //    @ResponseBody // string return하게 되면 dispatcher servlet이 해당 이름에 맞는 view를 찾으려고 하기 때문에 해당 annotation을 달아서 body에 넣어준다.
 //    @RequestMapping(value = "/hello", method = RequestMethod.GET) // 윗줄과 같다.
     public String hello(String name) {
-        return helloService.sayHello(Objects.requireNonNull(name));
+        if (name == null || name.trim().length() == 0) throw new IllegalArgumentException();
+        return helloService.sayHello(name);
     }
 
 //    @Override

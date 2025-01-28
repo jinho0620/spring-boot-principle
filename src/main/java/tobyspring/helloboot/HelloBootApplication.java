@@ -29,18 +29,8 @@ import org.springframework.web.servlet.DispatcherServlet;
 import java.io.IOException;
 
 
-@Configuration // 이 class는 구성 정보를 가진 class다. -> spring container가 이 안에 @bean이 붙은 factory method가 있겠구나라고 판단.
-@ComponentScan // 이 annotation이 붙은 package부터 하위 package들의 @Component가 붙은 class를 전부 뒤져서 bean으로 등록
+@MySpringBootAnnotation
 public class HelloBootApplication {
-	@Bean
-	public ServletWebServerFactory servletWebServerFactory() {
-		return new TomcatServletWebServerFactory();
-	}
-
-	@Bean
-	public DispatcherServlet dispatcherServlet() {
-		return new DispatcherServlet();
-	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(HelloBootApplication.class);

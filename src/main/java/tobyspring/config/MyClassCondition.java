@@ -12,6 +12,7 @@ public class MyClassCondition implements Condition {
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
         Map<String, Object> attrs = metadata.getAnnotationAttributes(ConditionalOnMyClass.class.getName());
         String value = (String) attrs.get("value");
+
         return ClassUtils.isPresent(value, context.getClassLoader());
     }
 }

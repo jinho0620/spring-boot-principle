@@ -18,9 +18,11 @@ repositories {
 }
 
 dependencies {
-	implementation ('org.springframework.boot:spring-boot-starter-web')
+	implementation ('org.springframework.boot:spring-boot-starter-web') {
+//		exclude module: 'spring-boot-starter-tomcat'
+	}
 //	implementation 'org.springframework.boot:spring-boot-starter-jetty'
-	implementation group: 'io.undertow', name: 'undertow-servlet', version: '2.3.18.Final'
+//	implementation group: 'io.undertow', name: 'undertow-servlet', version: '2.3.18.Final'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

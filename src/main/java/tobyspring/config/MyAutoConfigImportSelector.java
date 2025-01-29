@@ -1,14 +1,11 @@
 package tobyspring.config;
 
-import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.context.annotation.ImportCandidates;
 import org.springframework.context.annotation.DeferredImportSelector;
 import org.springframework.core.type.AnnotationMetadata;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.StreamSupport;
 
 public class MyAutoConfigImportSelector implements DeferredImportSelector {
     private final ClassLoader classLoader;

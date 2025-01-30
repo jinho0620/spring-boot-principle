@@ -1,11 +1,13 @@
 package tobyspring.config.autoconfig;
 
-import org.springframework.beans.factory.annotation.Value;
+import tobyspring.config.MyPropertiesConfiguration;
 
+//@Component
+@MyPropertiesConfiguration(prefix = "server")
 public class ServerProperties {
-    private String contextPath;
+    private String contextPath; // server.contextPath
 
-    private int port;
+    private int port; // server.port
 
     public String getContextPath() {
         return contextPath;

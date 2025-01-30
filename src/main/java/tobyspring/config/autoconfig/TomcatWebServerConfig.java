@@ -13,6 +13,7 @@ import tobyspring.config.MyAutoConfiguration;
 
 @MyAutoConfiguration
 @ConditionalOnMyClass("org.apache.catalina.startup.Tomcat")
+@EnableMyPropertiesConfiguration(ServerProperties.class)
 public class TomcatWebServerConfig {
 
     // bean의 이름은 기본적으로 factory method 이름을 따라간다.

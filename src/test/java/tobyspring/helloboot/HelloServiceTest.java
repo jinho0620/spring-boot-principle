@@ -23,9 +23,22 @@ import java.lang.annotation.Target;
 }
 
 public class HelloServiceTest {
+
+    private static HelloRepository helloRepositoryStub = new HelloRepository() {
+        @Override
+        public Hello findHello(String name) {
+            return null;
+        }
+
+        @Override
+        public void increaseCount(String name) {
+
+        }
+    };
+
     @FastUnitTest
     void simpleHelloService() {
-        SimpleHelloService helloService = new SimpleHelloService();
+        SimpleHelloService helloService = new SimpleHelloService(helloRepositoryStub);
 
         String ret = helloService.sayHello("Jinho");
 

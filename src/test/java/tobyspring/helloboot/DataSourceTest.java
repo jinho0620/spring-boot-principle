@@ -1,18 +1,15 @@
 package tobyspring.helloboot;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@HelloBootTest // class내의 test가 끝나면 rollback
+// class내의 test가 끝나면 rollback
+@JdbcTest // spring boot 가 test db를 준비하고, jdbc를 이용하기 위해 필요한 bean들만 loading -> 빠름
 public class DataSourceTest {
     @Autowired
     DataSource dataSource;
